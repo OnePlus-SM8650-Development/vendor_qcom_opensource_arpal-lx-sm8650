@@ -42,22 +42,22 @@ cc_library_shared {
         "-Werror",
         "-Wno-unused-variable",
         "-Wno-unused-parameter",
-		"-DCONFIG_GSL",
-		"-D_GNU_SOURCE",
-		"-DADSP_SLEEP_MONITOR",
-		"-DPAL_SP_TEMP_PATH=\"/data/vendor/audio/audio.cal\"",
-		"-DACD_SM_FILEPATH=\"/vendor/etc/models/acd/\"",
-		"-DA2DP_SINK_SUPPORTED",
-		"-DADSP_SLEEP_MONITOR",
+        "-DCONFIG_GSL",
+        "-D_GNU_SOURCE",
+        "-DADSP_SLEEP_MONITOR",
+        "-DPAL_SP_TEMP_PATH=\"/data/vendor/audio/audio.cal\"",
+        "-DACD_SM_FILEPATH=\"/vendor/etc/models/acd/\"",
+        "-DA2DP_SINK_SUPPORTED",
+        "-DADSP_SLEEP_MONITOR",
     ] + select(soong_config_variable("ANDROID", "target_board_platform"), {
         "kalama": [
-			"-DSOC_PERIPHERAL_PROT",
+            "-DSOC_PERIPHERAL_PROT",
         ],
-		"pineapple": [
-			"-DSOC_PERIPHERAL_PROT",
+        "pineapple": [
+            "-DSOC_PERIPHERAL_PROT",
         ],
-		"volcano": [
-			"-DWSA_V883X_ADDR",
+        "volcano": [
+            "-DWSA_V883X_ADDR",
         ],
         default: [],
     }),
@@ -69,7 +69,8 @@ cc_library_shared {
     include_dirs: [
         "system/media/audio_route/include",
 
-		"external/tinycompress/include"],
+        "external/tinycompress/include",
+    ],
     export_include_dirs: ["inc"],
 
     srcs: [
@@ -148,14 +149,14 @@ cc_library_shared {
         "libarmemlog_headers",
     ] + select(soong_config_variable("ANDROID", "target_board_platform"), {
         "kalama": [
-			"peripheralstate_headers",
-			"vendor_common_inc",
-			"mink_headers",
+            "peripheralstate_headers",
+            "vendor_common_inc",
+            "mink_headers",
         ],
-		"pineapple": [
-			"peripheralstate_headers",
-			"vendor_common_inc",
-			"mink_headers",
+        "pineapple": [
+            "peripheralstate_headers",
+            "vendor_common_inc",
+            "mink_headers",
         ],
         default: [],
     }),
@@ -173,28 +174,27 @@ cc_library_shared {
         "libhidlbase",
     ] + select(soong_config_variable("ANDROID", "target_board_platform"), {
         "kalama": [
-			"libPeripheralStateUtils",
+            "libPeripheralStateUtils",
         ],
-		"pineapple": [
-			"libPeripheralStateUtils",
+        "pineapple": [
+            "libPeripheralStateUtils",
         ],
         default: [],
     }) + select(soong_config_variable("qtiaudio", "target_uses_qti_tinycompress"), {
-            "true": [
-				"libqti-tinyalsa",
-				"libqti-tinycompress",
-			],
-			"false": [
-                "libtinyalsa",
-                "libtinycompress",
-			],
-			default: [
-                "libtinyalsa",
-                "libtinycompress",
-			],
-		}),
+        "true": [
+            "libqti-tinyalsa",
+            "libqti-tinycompress",
+        ],
+        "false": [
+            "libtinyalsa",
+            "libtinycompress",
+        ],
+        default: [
+            "libtinyalsa",
+            "libtinycompress",
+        ],
+    }),
 }
-
 
 //-------------------------------------------
 //            Build CHARGER_LISTENER LIB
@@ -228,8 +228,9 @@ cc_binary {
     name: "PalTest",
 
     cflags: [
-		"-Wno-tautological-compare",
-		"-Wno-macro-redefined",],
+        "-Wno-tautological-compare",
+        "-Wno-macro-redefined",
+    ],
 
     srcs: [
         "test/PalUsecaseTest.c",
@@ -245,4 +246,3 @@ cc_binary {
     vendor: true,
 
 }
-
