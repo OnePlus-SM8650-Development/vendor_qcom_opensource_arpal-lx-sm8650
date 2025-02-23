@@ -1,0 +1,248 @@
+// Copyright (C) 2025 The XPerience Project
+
+PAL_BASE_PATH = ["."]
+
+soong_config_module_type {
+    name: "target_board_platform_cc_library_shared",
+    module_type: "cc_library_shared",
+    config_namespace: "ANDROID",
+    value_variables: ["target_board_platform"],
+    properties: [
+        "name",
+    ],
+}
+
+cc_library_headers {
+
+    name: "libarpal_headers",
+    export_include_dirs: [
+        "inc",
+        "stream/inc",
+        "device/inc",
+        "session/inc",
+        "resource_manager/inc",
+        "context_manager/inc",
+        "utils/inc",
+        "plugins/codecs",
+    ],
+
+    vendor: true,
+
+}
+
+cc_library_shared {
+
+    name: "libar-pal",
+    owner: "qti",
+
+    vendor: true,
+
+    cflags: ["-D_ANDROID_"] + ["-Wno-macro-redefined"] + [
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-variable",
+        "-Wno-unused-parameter",
+		"-DCONFIG_GSL",
+		"-D_GNU_SOURCE",
+		"-DADSP_SLEEP_MONITOR",
+		"-DPAL_SP_TEMP_PATH=\"/data/vendor/audio/audio.cal\"",
+		"-DACD_SM_FILEPATH=\"/vendor/etc/models/acd/\"",
+		"-DA2DP_SINK_SUPPORTED",
+		"-DADSP_SLEEP_MONITOR",
+    ] + select(soong_config_variable("ANDROID", "target_board_platform"), {
+        "kalama": [
+			"-DSOC_PERIPHERAL_PROT",
+        ],
+		"pineapple": [
+			"-DSOC_PERIPHERAL_PROT",
+        ],
+		"volcano": [
+			"-DWSA_V883X_ADDR",
+        ],
+        default: [],
+    }),
+    cppflags: [
+        "-fexceptions",
+        "-frtti",
+    ],
+
+    include_dirs: [
+        "system/media/audio_route/include",
+
+		"external/tinycompress/include"],
+    export_include_dirs: ["inc"],
+
+    srcs: [
+        "Pal.cpp",
+        "stream/src/Stream.cpp",
+        "stream/src/StreamCompress.cpp",
+        "stream/src/StreamPCM.cpp",
+        "stream/src/StreamACDB.cpp",
+        "stream/src/StreamInCall.cpp",
+        "stream/src/StreamNonTunnel.cpp",
+        "stream/src/StreamSoundTrigger.cpp",
+        "stream/src/StreamACD.cpp",
+        "stream/src/StreamCommon.cpp",
+        "stream/src/StreamContextProxy.cpp",
+        "stream/src/StreamCommonProxy.cpp",
+        "stream/src/StreamUltraSound.cpp",
+        "stream/src/StreamSensorPCMData.cpp",
+        "stream/src/StreamHaptics.cpp",
+        "device/src/Headphone.cpp",
+        "device/src/USBAudio.cpp",
+        "device/src/Device.cpp",
+        "device/src/Speaker.cpp",
+        "device/src/Bluetooth.cpp",
+        "device/src/SpeakerMic.cpp",
+        "device/src/HeadsetMic.cpp",
+        "device/src/HdmiIn.cpp",
+        "device/src/HandsetMic.cpp",
+        "device/src/Handset.cpp",
+        "device/src/HandsetVaMic.cpp",
+        "device/src/DisplayPort.cpp",
+        "device/src/HeadsetVaMic.cpp",
+        "device/src/RTProxy.cpp",
+        "device/src/SpeakerProtection.cpp",
+        "device/src/FMDevice.cpp",
+        "device/src/ExtEC.cpp",
+        "device/src/HapticsDev.cpp",
+        "device/src/UltrasoundDevice.cpp",
+        "device/src/ECRefDevice.cpp",
+        "device/src/DummyDev.cpp",
+        "device/src/HapticsDevProtection.cpp",
+        "session/src/Session.cpp",
+        "session/src/PayloadBuilder.cpp",
+        "session/src/SessionAlsaPcm.cpp",
+        "session/src/SessionAgm.cpp",
+        "session/src/SessionAlsaUtils.cpp",
+        "session/src/SessionAlsaCompress.cpp",
+        "session/src/SessionAlsaVoice.cpp",
+        "session/src/SoundTriggerEngine.cpp",
+        "session/src/SoundTriggerEngineCapi.cpp",
+        "session/src/SoundTriggerEngineGsl.cpp",
+        "session/src/ContextDetectionEngine.cpp",
+        "context_manager/src/ContextManager.cpp",
+        "session/src/ACDEngine.cpp",
+        "resource_manager/src/ResourceManager.cpp",
+        "resource_manager/src/SndCardMonitor.cpp",
+        "utils/src/SoundTriggerPlatformInfo.cpp",
+        "utils/src/ACDPlatformInfo.cpp",
+        "utils/src/VoiceUIPlatformInfo.cpp",
+        "utils/src/PalRingBuffer.cpp",
+        "utils/src/SignalHandler.cpp",
+        "utils/src/AudioHapticsInterface.cpp",
+        "utils/src/MetadataParser.cpp",
+        "utils/src/MemLogBuilder.cpp",
+    ],
+
+    header_libs: [
+        "libarpal_headers",
+        "libspf-headers",
+        "libcapiv2_headers",
+        "libagm_headers",
+        "libacdb_headers",
+        "libarosal_headers",
+        "libvui_dmgr_headers",
+        "libaudiofeaturestats_headers",
+        "libarvui_intf_headers",
+        "libarmemlog_headers",
+    ] + select(soong_config_variable("ANDROID", "target_board_platform"), {
+        "kalama": [
+			"peripheralstate_headers",
+			"vendor_common_inc",
+			"mink_headers",
+        ],
+		"pineapple": [
+			"peripheralstate_headers",
+			"vendor_common_inc",
+			"mink_headers",
+        ],
+        default: [],
+    }),
+    shared_libs: [
+        "libar-gsl",
+        "liblog",
+        "libexpat",
+        "liblx-osal",
+        "libaudioroute",
+        "libcutils",
+        "libutilscallstack",
+        "libagmclient",
+        "libvui_intf",
+        "libarmemlog",
+        "libhidlbase",
+    ] + select(soong_config_variable("ANDROID", "target_board_platform"), {
+        "kalama": [
+			"libPeripheralStateUtils",
+        ],
+		"pineapple": [
+			"libPeripheralStateUtils",
+        ],
+        default: [],
+    }) + select(soong_config_variable("qtiaudio", "target_uses_qti_tinycompress"), {
+            "true": [
+				"libqti-tinyalsa",
+				"libqti-tinycompress",
+			],
+			"false": [
+                "libtinyalsa",
+                "libtinycompress",
+			],
+			default: [
+                "libtinyalsa",
+                "libtinycompress",
+			],
+		}),
+}
+
+
+//-------------------------------------------
+//            Build CHARGER_LISTENER LIB
+//-------------------------------------------
+cc_library_shared {
+
+    name: "libaudiochargerlistener",
+    owner: "qti",
+
+    vendor: true,
+
+    srcs: ["utils/src/ChargerListener.cpp"],
+
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-function",
+        "-Wno-unused-variable",
+    ],
+
+    shared_libs: [
+        "libcutils",
+        "liblog",
+    ],
+
+    local_include_dirs: ["utils/inc"],
+
+}
+
+cc_binary {
+    name: "PalTest",
+
+    cflags: [
+		"-Wno-tautological-compare",
+		"-Wno-macro-redefined",],
+
+    srcs: [
+        "test/PalUsecaseTest.c",
+        "test/PalTest_main.c",
+    ],
+
+    owner: "qti",
+
+    header_libs: ["libarpal_headers"],
+
+    shared_libs: ["libpalclient"],
+
+    vendor: true,
+
+}
+

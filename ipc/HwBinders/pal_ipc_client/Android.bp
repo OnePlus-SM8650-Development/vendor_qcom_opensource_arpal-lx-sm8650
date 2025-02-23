@@ -1,0 +1,33 @@
+//
+// SPDX-FileCopyrightText: 2025 The XPerience Project
+// SPDX-License-Identifier: Apache-2.0
+
+cc_library_shared {
+
+    name: "libpalclient",
+    owner: "qti",
+    vendor: true,
+    cflags: [
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+        "-Wno-format",
+    ],
+    srcs: ["src/pal_client_wrapper.cpp"],
+
+    shared_libs: [
+        "libhidlbase",
+        "libutils",
+        "liblog",
+        "libcutils",
+        "libfmq",
+        "libhardware",
+        "libbase",
+        "vendor.qti.hardware.pal@1.0",
+        "android.hidl.allocator@1.0",
+        "android.hidl.memory@1.0",
+        "libhidlmemory",
+    ],
+
+    export_header_lib_headers: ["libarpal_headers"],
+    header_libs: ["libarpal_headers"],
+}
